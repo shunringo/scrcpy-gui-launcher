@@ -94,6 +94,12 @@ class LeftPanelMixin:
         self._wifi_box = QWidget()
         wl = QVBoxLayout(self._wifi_box)
         wl.setContentsMargins(0, 4, 0, 0); wl.setSpacing(4)
+
+        guide_btn = QPushButton(tr("pairing_help_btn"))
+        guide_btn.setObjectName("pairingGuideBtn")
+        guide_btn.clicked.connect(self._show_pairing_help)
+        wl.addWidget(guide_btn)
+
         wl.addWidget(QLabel(tr("ip_label")))
         self._wifi_ip = QLineEdit(self.settings.get("wifi_ip", "192.168.1."))
         self._wifi_ip.setPlaceholderText("192.168.1.xxx")
@@ -101,12 +107,6 @@ class LeftPanelMixin:
         wl.addWidget(QLabel(tr("port_label")))
         self._wifi_port = QLineEdit(self.settings.get("wifi_port", "5555"))
         wl.addWidget(self._wifi_port)
-
-        guide_btn = QPushButton(tr("pairing_help_btn"))
-        guide_btn.setObjectName("pairingGuideBtn")
-        guide_btn.clicked.connect(self._show_pairing_help)
-        wl.addWidget(guide_btn)
-
         wl.addWidget(self._mk_pairing_group())
 
         cl.addWidget(self._wifi_box)
