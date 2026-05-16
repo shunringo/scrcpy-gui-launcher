@@ -59,7 +59,6 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "wifi_radio":       "Wi-Fi 接続",
         "ip_label":         "IP アドレス:",
         "port_label":       "ポート:",
-        "connect_btn":      "🔗 接続",
 
         # Pairing group
         "pairing_group":        "ペアリング (Android 11+)",
@@ -172,7 +171,7 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         ),
         "input_error":      "入力エラー",
         "no_ip_msg":        "IP アドレスを入力してください",
-        "no_pair_info_msg":     "IP アドレスとペアコードを入力してください",
+        "no_pair_info_msg":     "IP アドレス、ポート、ペアコードをすべて入力してください",
         "wifi_connecting":      "Wi-Fi 接続中: {addr}",
         "wifi_pairing":         "ペアリング中: {addr}",
         "wifi_pair_success":    "ペアリング成功。接続中: {addr}",
@@ -279,7 +278,6 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "wifi_radio":       "Wi-Fi connection",
         "ip_label":         "IP address:",
         "port_label":       "Port:",
-        "connect_btn":      "🔗 Connect",
 
         # Pairing group
         "pairing_group":        "Pairing (Android 11+)",
@@ -392,7 +390,7 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         ),
         "input_error":      "Input error",
         "no_ip_msg":        "Please enter an IP address",
-        "no_pair_info_msg":     "Please enter IP address and pairing code",
+        "no_pair_info_msg":     "Please enter IP address, ports, and pairing code",
         "wifi_connecting":      "Connecting Wi-Fi: {addr}",
         "wifi_pairing":         "Pairing: {addr}",
         "wifi_pair_success":    "Pairing successful. Connecting: {addr}",

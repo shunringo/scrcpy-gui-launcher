@@ -360,7 +360,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         pair_port = self._pair_port.text().strip()
         conn_port = self._wifi_port.text().strip()
         code = self._pair_code.text().strip()
-        if not ip or not code:
+        if not ip or not pair_port or not conn_port or not code:
             QMessageBox.warning(self, tr("input_error"), tr("no_pair_info_msg")); return
         self._log_sig.emit(tr("wifi_pairing", addr=f"{ip}:{pair_port}"), "INFO")
         w = AdbWorker(self._adb_path(), ["pair", f"{ip}:{pair_port}", code])
@@ -600,6 +600,8 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
                 with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
                     loaded = json.load(f)
                 self.settings.update(loaded)
+                # 旧キーのマイグレーション: pair_ip は wifi_ip に統合済み
+                self.settings.pop("pair_ip", None)
         except Exception as e:
             print(tr("settings_load_err", e=e))
 
