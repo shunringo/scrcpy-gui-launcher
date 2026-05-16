@@ -1,0 +1,19 @@
+# ユーザー設定・プリセット（個人データのため除外）
+scrcpy_launcher_settings.json
+scrcpy_launcher_presets.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# PyInstaller
+*.spec
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
