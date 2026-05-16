@@ -1,0 +1,61 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build EXE with PyInstaller
+        run: pyinstaller scrcpy_gui_launcher.spec
+
+      - name: Verify build
+        run: Test-Path dist\scrcpy-gui-launcher.exe
+        shell: pwsh
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/scrcpy-gui-launcher.exe
+          generate_release_notes: true
+          body: |
+            ## 使い方 / How to use
+
+            1. [scrcpy](https://github.com/Genymobile/scrcpy/releases) をダウンロード・展開する
+            2. `scrcpy-gui-launcher.exe` を scrcpy フォルダ内に配置する
+            3. `scrcpy-gui-launcher.exe` をダブルクリック（Python不要）
+
+            ---
+
+            1. Download and extract [scrcpy](https://github.com/Genymobile/scrcpy/releases)
+            2. Place `scrcpy-gui-launcher.exe` inside the scrcpy folder
+            3. Double-click `scrcpy-gui-launcher.exe` (no Python required)
+
+            ```
+            scrcpy-win64-vX.X/
+            ├── scrcpy.exe
+            ├── adb.exe
+            └── scrcpy-gui-launcher.exe  ← ここに置く / Place here
+            ```
+
+            > ⚠️ Windows Defender が警告を出す場合は「詳細情報」→「実行」で起動できます。
+            > ⚠️ If Windows Defender shows a warning, click "More info" → "Run anyway".
