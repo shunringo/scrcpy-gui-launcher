@@ -1,5 +1,7 @@
 # scrcpy GUI Launcher
 
+🌐 [English](./README.en.md) | 日本語
+
 scrcpy v4.0 の主要オプションを GUI で設定・起動できる Windows 向けランチャーです。  
 コマンドライン操作なしで scrcpy を使えます。
 
