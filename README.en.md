@@ -18,14 +18,14 @@ scrcpy-win64-v4.0/      ← scrcpy installation folder
 ├── scrcpy.exe
 ├── adb.exe
 ├── *.dll ...
-└── launcher/           ← place this repository here
+└── scrcpy-gui-launcher/  ← place this repository here
     ├── launch_gui.bat
     ├── scrcpy_launcher.py
     └── requirements.txt
 ```
 
 1. Extract the scrcpy ZIP archive.
-2. Place the `launcher/` folder inside the scrcpy folder.
+2. Place the `scrcpy-gui-launcher/` folder inside the scrcpy folder.
 3. Double-click `launch_gui.bat` (PyQt5 is installed automatically on first run).
 
 Or install manually:
@@ -52,7 +52,7 @@ python scrcpy_launcher.py
 
 ## Updating scrcpy
 
-Just copy the `launcher/` folder into the new scrcpy folder.  
+Just copy the `scrcpy-gui-launcher/` folder into the new scrcpy folder.  
 `scrcpy.exe` is located automatically (parent folder first, then same folder).
 
 ## License

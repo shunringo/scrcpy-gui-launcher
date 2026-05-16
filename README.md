@@ -18,14 +18,14 @@ scrcpy-win64-v4.0/      ← scrcpy 本体フォルダ
 ├── scrcpy.exe
 ├── adb.exe
 ├── *.dll ...
-└── launcher/           ← このリポジトリをここに配置
+└── scrcpy-gui-launcher/  ← このリポジトリをここに配置
     ├── launch_gui.bat
     ├── scrcpy_launcher.py
     └── requirements.txt
 ```
 
 1. scrcpy の ZIP を展開する
-2. `launcher/` フォルダを scrcpy フォルダ内に配置する
+2. `scrcpy-gui-launcher/` フォルダを scrcpy フォルダ内に配置する
 3. `launch_gui.bat` をダブルクリック（初回は PyQt5 を自動インストール）
 
 または手動でインストール：
@@ -51,7 +51,7 @@ python scrcpy_launcher.py
 
 ## scrcpy アップデート時
 
-新バージョンの scrcpy フォルダに `launcher/` をコピーするだけです。  
+新バージョンの scrcpy フォルダに `scrcpy-gui-launcher/` をコピーするだけです。  
 `scrcpy.exe` は親フォルダ → 同フォルダの順に自動検索します。
 
 ## ライセンス
