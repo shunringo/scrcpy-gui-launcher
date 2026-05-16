@@ -59,13 +59,30 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "wifi_radio":       "Wi-Fi 接続",
         "ip_label":         "IP アドレス:",
         "port_label":       "ポート:",
-        "connect_btn":      "🔗 接続",
 
         # Pairing group
-        "pairing_group":  "ペアリング (Android 11+)",
-        "pair_ip_label":  "ペア IP : ポート:",
-        "pair_code_label": "ペアコード:",
-        "pair_btn":       "🔑 ペアリング",
+        "pairing_group":        "ペアリング (Android 11+)",
+        "pair_port_label":      "ペアリングポート:",
+        "pair_code_label":      "ペアコード:",
+        "pair_and_connect_btn": "🔑 ペアリングして接続",
+        "pairing_help_btn":     "📖 Wi-Fi ペアリングの手順を確認",
+        "pairing_help_title":   "Wi-Fi ペアリングの手順",
+        "pairing_help_text": (
+            "Android のワイヤレスデバッグでは\n"
+            "「接続用ポート」と「ペアリング用ポート」の\n"
+            "2つが使われます。\n\n"
+            "① Android の設定 → 開発者向けオプション\n"
+            "   →「ワイヤレスデバッグ」をオン\n\n"
+            "② メイン画面に表示される\n"
+            "   「IP アドレスとポート」を\n"
+            "   上部の「IP アドレス」と「ポート」に入力\n\n"
+            "③「デバイスのペア設定（コードを使用）」を\n"
+            "   タップして表示される\n"
+            "   「ポート」→「ペアリングポート」\n"
+            "   「コード」→「ペアコード」に入力\n\n"
+            "④「ペアリングして接続」を押す\n"
+            "   → ペアリング後に自動で接続されます"
+        ),
 
         # Path group
         "path_group":       "📁 scrcpy パス",
@@ -172,9 +189,10 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         ),
         "input_error":      "入力エラー",
         "no_ip_msg":        "IP アドレスを入力してください",
-        "no_pair_info_msg": "ペアリング IP とコードを入力してください",
-        "wifi_connecting":  "Wi-Fi 接続中: {addr}",
-        "wifi_pairing":     "ペアリング中: {addr}",
+        "no_pair_info_msg":     "IP アドレス、ポート、ペアコードをすべて入力してください",
+        "wifi_connecting":      "Wi-Fi 接続中: {addr}",
+        "wifi_pairing":         "ペアリング中: {addr}",
+        "wifi_pair_success":    "ペアリング成功。接続中: {addr}",
 
         # File dialogs
         "select_scrcpy_title":  "scrcpy.exe を選択",
@@ -278,13 +296,28 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "wifi_radio":       "Wi-Fi connection",
         "ip_label":         "IP address:",
         "port_label":       "Port:",
-        "connect_btn":      "🔗 Connect",
 
         # Pairing group
-        "pairing_group":   "Pairing (Android 11+)",
-        "pair_ip_label":   "Pair IP : Port:",
-        "pair_code_label": "Pair code:",
-        "pair_btn":        "🔑 Pair",
+        "pairing_group":        "Pairing (Android 11+)",
+        "pair_port_label":      "Pairing port:",
+        "pair_code_label":      "Pair code:",
+        "pair_and_connect_btn": "🔑 Pair & Connect",
+        "pairing_help_btn":     "📖 Wi-Fi Pairing Guide",
+        "pairing_help_title":   "Wi-Fi Pairing Guide",
+        "pairing_help_text": (
+            "Android wireless debugging uses two separate ports:\n"
+            "one for pairing and one for connecting.\n\n"
+            "① Go to Settings → Developer options\n"
+            "   → Enable 'Wireless debugging'\n\n"
+            "② On the main screen, note the\n"
+            "   'IP address & Port' — enter them in\n"
+            "   'IP address' and 'Port' above\n\n"
+            "③ Tap 'Pair device with pairing code'\n"
+            "   Enter the shown port → 'Pairing port'\n"
+            "   Enter the shown code → 'Pair code'\n\n"
+            "④ Press 'Pair & Connect'\n"
+            "   → Automatically connects after pairing"
+        ),
 
         # Path group
         "path_group":       "📁 scrcpy path",
@@ -391,9 +424,10 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         ),
         "input_error":      "Input error",
         "no_ip_msg":        "Please enter an IP address",
-        "no_pair_info_msg": "Please enter pairing IP and code",
-        "wifi_connecting":  "Connecting Wi-Fi: {addr}",
-        "wifi_pairing":     "Pairing: {addr}",
+        "no_pair_info_msg":     "Please enter IP address, ports, and pairing code",
+        "wifi_connecting":      "Connecting Wi-Fi: {addr}",
+        "wifi_pairing":         "Pairing: {addr}",
+        "wifi_pair_success":    "Pairing successful. Connecting: {addr}",
 
         # File dialogs
         "select_scrcpy_title":  "Select scrcpy.exe",
