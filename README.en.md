@@ -8,31 +8,36 @@ Configure and launch scrcpy without touching the command line.
 ## Requirements
 
 - Windows 10 / 11 (64-bit)
-- Python 3.10 or later
 - [scrcpy v4.0](https://github.com/Genymobile/scrcpy) (obtained separately)
 
 ## Setup
 
+### Option ① EXE release (recommended — no Python required)
+
+1. Download and extract [scrcpy](https://github.com/Genymobile/scrcpy/releases).
+2. Download `scrcpy-gui-launcher.exe` from [Releases](https://github.com/shunringo/scrcpy-gui-launcher/releases/latest).
+3. Place `scrcpy-gui-launcher.exe` inside the scrcpy folder.
+4. Double-click `scrcpy-gui-launcher.exe`.
+
 ```
-scrcpy-win64-v4.0/      ← scrcpy installation folder
+scrcpy-win64-v4.0/
 ├── scrcpy.exe
 ├── adb.exe
 ├── *.dll ...
-└── scrcpy-gui-launcher/  ← place this repository here
-    ├── launch_gui.bat
-    ├── scrcpy_launcher.py
-    └── requirements.txt
+└── scrcpy-gui-launcher.exe  ← just place it here
 ```
 
-1. Extract the scrcpy ZIP archive.
-2. Place the `scrcpy-gui-launcher/` folder inside the scrcpy folder.
-3. Double-click `launch_gui.bat` (PyQt5 is installed automatically on first run).
+> ⚠️ If Windows Defender shows a warning, click "More info" → "Run anyway".
 
-Or install manually:
+### Option ② Run from source (for developers)
 
-```
-pip install PyQt5
-python scrcpy_launcher.py
+Python 3.10 or later is required.
+
+```bash
+git clone https://github.com/shunringo/scrcpy-gui-launcher.git
+cd scrcpy-gui-launcher
+pip install -r requirements.txt
+python src/scrcpy_launcher.py
 ```
 
 ## Features
@@ -52,8 +57,8 @@ python scrcpy_launcher.py
 
 ## Updating scrcpy
 
-Just copy the `scrcpy-gui-launcher/` folder into the new scrcpy folder.  
-`scrcpy.exe` is located automatically (parent folder first, then same folder).
+Just copy `scrcpy-gui-launcher.exe` into the new scrcpy folder.  
+`scrcpy.exe` is located automatically in the same folder.
 
 ## License
 

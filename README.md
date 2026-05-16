@@ -8,31 +8,36 @@ scrcpy v4.0 の主要オプションを GUI で設定・起動できる Windows 
 ## 動作環境
 
 - Windows 10 / 11 (64bit)
-- Python 3.10 以上
 - [scrcpy v4.0](https://github.com/Genymobile/scrcpy)（別途用意）
 
 ## セットアップ
 
+### 方法① EXE版（推奨・Python不要）
+
+1. [scrcpy](https://github.com/Genymobile/scrcpy/releases) の ZIP を展開する
+2. [Releases](https://github.com/shunringo/scrcpy-gui-launcher/releases/latest) から `scrcpy-gui-launcher.exe` をダウンロードする
+3. `scrcpy-gui-launcher.exe` を scrcpy フォルダ内に配置する
+4. `scrcpy-gui-launcher.exe` をダブルクリック
+
 ```
-scrcpy-win64-v4.0/      ← scrcpy 本体フォルダ
+scrcpy-win64-v4.0/
 ├── scrcpy.exe
 ├── adb.exe
 ├── *.dll ...
-└── scrcpy-gui-launcher/  ← このリポジトリをここに配置
-    ├── launch_gui.bat
-    ├── scrcpy_launcher.py
-    └── requirements.txt
+└── scrcpy-gui-launcher.exe  ← ここに置くだけ
 ```
 
-1. scrcpy の ZIP を展開する
-2. `scrcpy-gui-launcher/` フォルダを scrcpy フォルダ内に配置する
-3. `launch_gui.bat` をダブルクリック（初回は PyQt5 を自動インストール）
+> ⚠️ Windows Defender が警告を出す場合は「詳細情報」→「実行」で起動できます。
 
-または手動でインストール：
+### 方法② ソースから実行（開発者向け）
 
-```
-pip install PyQt5
-python scrcpy_launcher.py
+Python 3.10 以上が必要です。
+
+```bash
+git clone https://github.com/shunringo/scrcpy-gui-launcher.git
+cd scrcpy-gui-launcher
+pip install -r requirements.txt
+python src/scrcpy_launcher.py
 ```
 
 ## 機能
@@ -51,8 +56,8 @@ python scrcpy_launcher.py
 
 ## scrcpy アップデート時
 
-新バージョンの scrcpy フォルダに `scrcpy-gui-launcher/` をコピーするだけです。  
-`scrcpy.exe` は親フォルダ → 同フォルダの順に自動検索します。
+新バージョンの scrcpy フォルダに `scrcpy-gui-launcher.exe` をコピーするだけです。  
+`scrcpy.exe` は同フォルダ内を自動検索します。
 
 ## ライセンス
 
