@@ -50,6 +50,8 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         self.device_list: list = []   # list of (serial, state, model)
         self._scrcpy: QProcess | None = None
         self._adb_worker: AdbWorker | None = None
+        self._pair_worker: AdbWorker | None = None
+        self._connect_worker: AdbWorker | None = None
         self._init_done = False
 
         self._load_settings()
@@ -366,20 +368,27 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         if not ip or not pair_port or not conn_port or not code:
             QMessageBox.warning(self, tr("input_error"), tr("no_pair_info_msg")); return
         self._log_sig.emit(tr("wifi_pairing", addr=f"{ip}:{pair_port}"), "INFO")
-        w = AdbWorker(self._adb_path(), ["pair", f"{ip}:{pair_port}", code])
+        self._pair_worker = AdbWorker(self._adb_path(), ["pair", f"{ip}:{pair_port}", code])
 
         def _on_pair_done(out: str, ok: bool):
             self._log_sig.emit(out, "INFO" if ok else "ERROR")
+            self._pair_worker = None
             if ok and "successfully" in out.lower():
                 self._log_sig.emit(tr("wifi_pair_success", addr=f"{ip}:{conn_port}"), "INFO")
-                w2 = AdbWorker(self._adb_path(), ["connect", f"{ip}:{conn_port}"])
-                w2.result.connect(lambda o, ok2: (
-                    self._log_sig.emit(o, "INFO" if ok2 else "ERROR"),
-                    QTimer.singleShot(500, self._refresh_devices)))
-                w2.finished.connect(w2.deleteLater); w2.start()
+                self._connect_worker = AdbWorker(self._adb_path(), ["connect", f"{ip}:{conn_port}"])
 
-        w.result.connect(_on_pair_done)
-        w.finished.connect(w.deleteLater); w.start()
+                def _on_connect_done(o: str, ok2: bool):
+                    self._log_sig.emit(o, "INFO" if ok2 else "ERROR")
+                    self._connect_worker = None
+                    QTimer.singleShot(500, self._refresh_devices)
+
+                self._connect_worker.result.connect(_on_connect_done)
+                self._connect_worker.finished.connect(self._connect_worker.deleteLater)
+                self._connect_worker.start()
+
+        self._pair_worker.result.connect(_on_pair_done)
+        self._pair_worker.finished.connect(self._pair_worker.deleteLater)
+        self._pair_worker.start()
 
     # ── ファイル操作 ────────────────────────────────────────
     def _browse_scrcpy(self):
