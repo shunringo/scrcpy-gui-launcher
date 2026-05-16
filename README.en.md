@@ -5,6 +5,9 @@
 A Windows GUI launcher for scrcpy v4.0.  
 Configure and launch scrcpy without touching the command line.
 
+![Main screen (light mode)](docs/screenshot_main.png)
+![Main screen (dark mode)](docs/screenshot_dark.png)
+
 ## Requirements
 
 - Windows 10 / 11 (64-bit)

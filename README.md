@@ -5,6 +5,9 @@
 scrcpy v4.0 の主要オプションを GUI で設定・起動できる Windows 向けランチャーです。  
 コマンドライン操作なしで scrcpy を使えます。
 
+![メイン画面（ライトモード）](docs/screenshot_main.png)
+![メイン画面（ダークモード）](docs/screenshot_dark.png)
+
 ## 動作環境
 
 - Windows 10 / 11 (64bit)
