@@ -2,6 +2,7 @@
 """MainWindow — アプリケーションロジック"""
 
 import json
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -21,6 +22,22 @@ from themes import DARK_STYLE, LIGHT_STYLE
 from dialogs import OnboardingDialog, PresetDialog
 from ui_panels import LeftPanelMixin
 from ui_tabs import TabsMixin
+
+
+def _is_wifi_serial(serial: str) -> bool:
+    """ADB シリアルが Wi-Fi 接続かどうかを判定する。
+
+    対応形式:
+    - 従来の adb connect: 192.168.1.10:5555  （host:port）
+    - Android 11+ ワイヤレスデバッグ: adb-XXXX._adb-tls-connect._tcp
+    """
+    # Android 11+ mDNS ワイヤレスデバッグ
+    if "._adb-tls-connect._tcp" in serial:
+        return True
+    # 従来の adb connect (host:port)
+    if re.match(r'.+:\d+$', serial):
+        return True
+    return False
 
 
 class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
@@ -310,9 +327,8 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         else:
             for serial, state, model in devices:
                 status_icon = "✅" if state == "device" else ("⚠️" if state == "offline" else "🔒")
-                # シリアルが IP:ポート形式なら Wi-Fi 接続
-                conn_icon = "📡" if ":" in serial else "🔌"
-                label = f"{status_icon}{conn_icon} {model or serial}  ({serial})  [{state}]"
+                conn_tag = "[Wi-Fi]" if _is_wifi_serial(serial) else "[USB]"
+                label = f"{status_icon} {conn_tag} {model or serial}  ({serial})  [{state}]"
                 self._dev_combo.addItem(label, serial)
                 self.device_list.append((serial, state))
                 if state == "offline":
