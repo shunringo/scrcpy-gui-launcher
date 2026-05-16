@@ -65,7 +65,7 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "pair_port_label":      "ペアリングポート:",
         "pair_code_label":      "ペアコード:",
         "pair_and_connect_btn": "🔑 ペアリングして接続",
-        "pairing_help_btn":     "?",
+        "pairing_help_btn":     "📖 Wi-Fi ペアリングの手順を確認",
         "pairing_help_title":   "Wi-Fi ペアリングの手順",
         "pairing_help_text": (
             "Android のワイヤレスデバッグでは\n"
@@ -302,7 +302,7 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "pair_port_label":      "Pairing port:",
         "pair_code_label":      "Pair code:",
         "pair_and_connect_btn": "🔑 Pair & Connect",
-        "pairing_help_btn":     "?",
+        "pairing_help_btn":     "📖 Wi-Fi Pairing Guide",
         "pairing_help_title":   "Wi-Fi Pairing Guide",
         "pairing_help_text": (
             "Android wireless debugging uses two separate ports:\n"
