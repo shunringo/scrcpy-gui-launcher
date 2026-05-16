@@ -55,3 +55,11 @@ python scrcpy_launcher.py
 ## ライセンス
 
 MIT License
+
+## Credits
+
+This application is a GUI launcher for [scrcpy](https://github.com/Genymobile/scrcpy)
+by [Genymobile](https://github.com/Genymobile), licensed under the
+[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+
+scrcpy itself is not modified by this project.
