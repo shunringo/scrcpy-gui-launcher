@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QTimer, QProcess, QSignalBlocker
 
 from config import (
-    APP_NAME, APP_VERSION, SCRIPT_DIR, SCRCPY_SEARCH_DIRS,
+    APP_NAME, APP_VERSION, APP_DIR, SCRCPY_SEARCH_DIRS,
     SETTINGS_FILE, PRESETS_FILE, DEFAULT_SETTINGS,
 )
 from command import build_args, build_command_preview
@@ -366,12 +366,12 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
     # ── ファイル操作 ────────────────────────────────────────
     def _browse_scrcpy(self):
         p, _ = QFileDialog.getOpenFileName(
-            self, "scrcpy.exe を選択", str(SCRIPT_DIR), "実行ファイル (*.exe)")
+            self, "scrcpy.exe を選択", str(APP_DIR), "実行ファイル (*.exe)")
         if p: self._path_edit.setText(p)
 
     def _browse_record(self):
         fmt  = self._rec_fmt.currentText()
-        dflt = str(SCRIPT_DIR / f"scrcpy_{datetime.now().strftime('%Y%m%d_%H%M%S')}.{fmt}")
+        dflt = str(APP_DIR / f"scrcpy_{datetime.now().strftime('%Y%m%d_%H%M%S')}.{fmt}")
         p, _ = QFileDialog.getSaveFileName(self, "録画ファイルの保存先", dflt, f"動画 (*.{fmt})")
         if p:
             self._rec_file.setText(p)
@@ -380,7 +380,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
     def _use_default_rec_name(self):
         fmt = self._rec_fmt.currentText()
         self._rec_file.setText(
-            str(SCRIPT_DIR / f"scrcpy_{datetime.now().strftime('%Y%m%d_%H%M%S')}.{fmt}"))
+            str(APP_DIR / f"scrcpy_{datetime.now().strftime('%Y%m%d_%H%M%S')}.{fmt}"))
         self._changed()
 
     def _pick_bg(self):

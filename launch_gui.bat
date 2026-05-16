@@ -24,4 +24,4 @@ if errorlevel 1 (
 )
 
 echo Launching scrcpy GUI Launcher...
-python "%~dp0scrcpy_launcher.py"
+python "%~dp0src\scrcpy_launcher.py"
