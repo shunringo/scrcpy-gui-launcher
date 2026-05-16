@@ -3,8 +3,9 @@
 
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QComboBox, QLineEdit, QGroupBox, QRadioButton,
+    QComboBox, QLineEdit, QGroupBox, QRadioButton, QScrollArea,
 )
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
 from config import APP_NAME, APP_VERSION
@@ -41,16 +42,24 @@ class LeftPanelMixin:
         return w
 
     # ── 左パネル ───────────────────────────────────────────
-    def _mk_left_panel(self) -> QWidget:
-        panel = QWidget()
-        lay = QVBoxLayout(panel)
+    def _mk_left_panel(self) -> QScrollArea:
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll.setFrameShape(scroll.NoFrame)
+
+        inner = QWidget()
+        lay = QVBoxLayout(inner)
         lay.setContentsMargins(10, 10, 6, 10); lay.setSpacing(10)
 
         lay.addWidget(self._mk_device_group())
         lay.addWidget(self._mk_connection_group())
         lay.addWidget(self._mk_path_group())
         lay.addStretch()
-        return panel
+
+        scroll.setWidget(inner)
+        return scroll
 
     def _mk_device_group(self) -> QGroupBox:
         dg = QGroupBox(tr("device_group"))
