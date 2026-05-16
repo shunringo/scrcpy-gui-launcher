@@ -68,4 +68,5 @@ DEFAULT_SETTINGS: dict = {
     # アプリ
     "dark_mode": True,
     "onboarding_done": False,
+    "language": "ja",
 }

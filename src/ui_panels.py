@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QFont
 
 from config import APP_NAME, APP_VERSION
+from i18n import tr
 
 
 class LeftPanelMixin:
@@ -30,7 +31,11 @@ class LeftPanelMixin:
         self._sync_theme_btn_text()
         lay.addWidget(self._theme_btn)
 
-        help_btn = QPushButton("？ ヘルプ")
+        self._lang_btn = QPushButton(tr("lang_btn"))
+        self._lang_btn.clicked.connect(self._switch_language)
+        lay.addWidget(self._lang_btn)
+
+        help_btn = QPushButton(tr("help_btn"))
         help_btn.clicked.connect(self._show_onboarding)
         lay.addWidget(help_btn)
         return w
@@ -48,30 +53,30 @@ class LeftPanelMixin:
         return panel
 
     def _mk_device_group(self) -> QGroupBox:
-        dg = QGroupBox("📱 デバイス")
+        dg = QGroupBox(tr("device_group"))
         dl = QVBoxLayout(dg); dl.setSpacing(5)
 
         self._dev_combo = QComboBox()
-        self._dev_combo.setPlaceholderText("デバイスを選択...")
+        self._dev_combo.setPlaceholderText(tr("device_select_placeholder"))
         self._dev_combo.currentIndexChanged.connect(self._on_device_changed)
         dl.addWidget(self._dev_combo)
 
-        self._dev_status = QLabel("デバイスが見つかりません")
+        self._dev_status = QLabel(tr("device_not_found"))
         self._dev_status.setWordWrap(True)
         self._dev_status.setStyleSheet("color:#ff9800;font-size:11px;")
         dl.addWidget(self._dev_status)
 
-        ref_btn = QPushButton("🔄 デバイスを更新")
+        ref_btn = QPushButton(tr("refresh_devices_btn"))
         ref_btn.clicked.connect(self._refresh_devices)
         dl.addWidget(ref_btn)
         return dg
 
     def _mk_connection_group(self) -> QGroupBox:
-        cg = QGroupBox("🔌 新規デバイス接続")
+        cg = QGroupBox(tr("connection_group"))
         cl = QVBoxLayout(cg); cl.setSpacing(5)
 
-        self._usb_rb  = QRadioButton("USB 接続")
-        self._wifi_rb = QRadioButton("Wi-Fi 接続")
+        self._usb_rb  = QRadioButton(tr("usb_radio"))
+        self._wifi_rb = QRadioButton(tr("wifi_radio"))
         is_wifi = self.settings.get("connection_type") == "wifi"
         self._usb_rb.setChecked(not is_wifi); self._wifi_rb.setChecked(is_wifi)
         self._usb_rb.toggled.connect(self._on_conn_type_changed)
@@ -80,14 +85,14 @@ class LeftPanelMixin:
         self._wifi_box = QWidget()
         wl = QVBoxLayout(self._wifi_box)
         wl.setContentsMargins(0, 4, 0, 0); wl.setSpacing(4)
-        wl.addWidget(QLabel("IP アドレス:"))
+        wl.addWidget(QLabel(tr("ip_label")))
         self._wifi_ip = QLineEdit(self.settings.get("wifi_ip", "192.168.1."))
         self._wifi_ip.setPlaceholderText("192.168.1.xxx")
         wl.addWidget(self._wifi_ip)
-        wl.addWidget(QLabel("ポート:"))
+        wl.addWidget(QLabel(tr("port_label")))
         self._wifi_port = QLineEdit(self.settings.get("wifi_port", "5555"))
         wl.addWidget(self._wifi_port)
-        conn_btn = QPushButton("🔗 接続")
+        conn_btn = QPushButton(tr("connect_btn"))
         conn_btn.clicked.connect(self._wifi_connect)
         wl.addWidget(conn_btn)
         wl.addWidget(self._mk_pairing_group())
@@ -97,9 +102,9 @@ class LeftPanelMixin:
         return cg
 
     def _mk_pairing_group(self) -> QGroupBox:
-        pair_g = QGroupBox("ペアリング (Android 11+)")
+        pair_g = QGroupBox(tr("pairing_group"))
         pl = QVBoxLayout(pair_g); pl.setSpacing(4)
-        pl.addWidget(QLabel("ペア IP : ポート:"))
+        pl.addWidget(QLabel(tr("pair_ip_label")))
         pr = QHBoxLayout()
         self._pair_ip   = QLineEdit(self.settings.get("pair_ip", ""))
         self._pair_ip.setPlaceholderText("192.168.1.x")
@@ -107,23 +112,23 @@ class LeftPanelMixin:
         self._pair_port.setMaximumWidth(55)
         pr.addWidget(self._pair_ip); pr.addWidget(QLabel(":")); pr.addWidget(self._pair_port)
         pl.addLayout(pr)
-        pl.addWidget(QLabel("ペアコード:"))
+        pl.addWidget(QLabel(tr("pair_code_label")))
         self._pair_code = QLineEdit(self.settings.get("pair_code", ""))
         self._pair_code.setPlaceholderText("123456")
         pl.addWidget(self._pair_code)
-        pb = QPushButton("🔑 ペアリング")
+        pb = QPushButton(tr("pair_btn"))
         pb.clicked.connect(self._wifi_pair)
         pl.addWidget(pb)
         return pair_g
 
     def _mk_path_group(self) -> QGroupBox:
-        pg = QGroupBox("📁 scrcpy パス")
+        pg = QGroupBox(tr("path_group"))
         pgl = QVBoxLayout(pg); pgl.setSpacing(4)
         self._path_edit = QLineEdit(self.settings.get("scrcpy_path", ""))
-        self._path_edit.setPlaceholderText("scrcpy.exe のパス")
+        self._path_edit.setPlaceholderText(tr("path_placeholder"))
         self._path_edit.textChanged.connect(self._on_path_changed)
         pgl.addWidget(self._path_edit)
-        br = QPushButton("📂 参照...")
+        br = QPushButton(tr("browse_btn"))
         br.clicked.connect(self._browse_scrcpy)
         pgl.addWidget(br)
         self._path_status = QLabel()

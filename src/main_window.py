@@ -12,6 +12,8 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QTimer, QProcess, QSignalBlocker
 
+import i18n
+from i18n import tr
 from config import (
     APP_NAME, APP_VERSION, APP_DIR, SCRCPY_SEARCH_DIRS,
     SETTINGS_FILE, PRESETS_FILE, DEFAULT_SETTINGS,
@@ -31,10 +33,8 @@ def _is_wifi_serial(serial: str) -> bool:
     - 従来の adb connect: 192.168.1.10:5555  （host:port）
     - Android 11+ ワイヤレスデバッグ: adb-XXXX._adb-tls-connect._tcp
     """
-    # Android 11+ mDNS ワイヤレスデバッグ
     if "._adb-tls-connect._tcp" in serial:
         return True
-    # 従来の adb connect (host:port)
     if re.match(r'.+:\d+$', serial):
         return True
     return False
@@ -47,7 +47,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         super().__init__()
         self.settings: dict = dict(DEFAULT_SETTINGS)
         self.presets:  dict = {}
-        self.device_list: list = []
+        self.device_list: list = []   # list of (serial, state, model)
         self._scrcpy: QProcess | None = None
         self._adb_worker: AdbWorker | None = None
         self._init_done = False
@@ -55,6 +55,9 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         self._load_settings()
         self._load_presets()
         self._find_scrcpy()
+
+        # Apply saved language BEFORE building UI
+        i18n.set_lang(self.settings.get("language", "ja"))
 
         self.setWindowTitle(f"{APP_NAME} v{APP_VERSION}")
         self.setMinimumSize(960, 680)
@@ -279,10 +282,10 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
 
     def _validate_scrcpy_path(self):
         if self._scrcpy_path_valid():
-            self._path_status.setText("✅ scrcpy.exe を確認しました")
+            self._path_status.setText(tr("path_valid"))
             self._path_status.setStyleSheet("color:#4CAF50;font-size:11px;")
         else:
-            self._path_status.setText("❌ scrcpy.exe が見つかりません")
+            self._path_status.setText(tr("path_invalid"))
             self._path_status.setStyleSheet("color:#ef5350;font-size:11px;")
         self._update_run_button()
 
@@ -293,11 +296,11 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
             self._bg_btn.setText(f"#{color}")
         else:
             self._bg_btn.setStyleSheet("")
-            self._bg_btn.setText("選択")
+            self._bg_btn.setText(tr("bg_select_btn"))
 
     # ── デバイス管理 ────────────────────────────────────────
     def _refresh_devices(self):
-        self._dev_status.setText("🔄 検索中...")
+        self._dev_status.setText(tr("device_searching"))
         self._dev_status.setStyleSheet("color:#64b5f6;font-size:11px;")
         worker = AdbWorker(self._adb_path(), ["devices", "-l"])
         worker.result.connect(self._on_devices_result)
@@ -321,8 +324,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
             devices.append((serial, state, model))
 
         if not devices:
-            self._dev_status.setText(
-                "⚠️ デバイスが見つかりません。\nUSBを接続してUSBデバッグを許可してください。")
+            self._dev_status.setText(tr("device_not_found_msg"))
             self._dev_status.setStyleSheet("color:#ff9800;font-size:11px;")
         else:
             for serial, state, model in devices:
@@ -330,7 +332,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
                 conn_tag = "[Wi-Fi]" if _is_wifi_serial(serial) else "[USB]"
                 label = f"{status_icon} {conn_tag} {model or serial}  ({serial})  [{state}]"
                 self._dev_combo.addItem(label, serial)
-                self.device_list.append((serial, state))
+                self.device_list.append((serial, state, model))
                 if state == "offline":
                     QTimer.singleShot(50, self._show_offline_help)
 
@@ -342,29 +344,23 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
                     if self._dev_combo.itemData(i) == self.settings["selected_device"]:
                         self._dev_combo.setCurrentIndex(i); break
 
-            self._dev_status.setText(f"✅ {len(devices)} 台検出")
+            self._dev_status.setText(tr("device_found_msg", n=len(devices)))
             self._dev_status.setStyleSheet("color:#4CAF50;font-size:11px;")
 
         del blocker
-        self._log_sig.emit(f"デバイス検索完了 ({len(devices)} 台)", "INFO")
+        self._log_sig.emit(tr("device_scan_done", n=len(devices)), "INFO")
         self._update_run_button()
         self._update_command_preview()
 
     def _show_offline_help(self):
-        QMessageBox.information(self, "デバイスがオフライン状態",
-            "デバイスが offline 状態です。\n\n"
-            "【対処方法】\n"
-            "1. USBケーブルを抜き差ししてください\n"
-            "2. デバイスに「USBデバッグを許可しますか？」が表示されたら OK を押してください\n"
-            "3. 設定 → 開発者オプション → USBデバッグ を OFF → ON にしてください\n"
-            "4. adb を再起動: adb kill-server / adb start-server")
+        QMessageBox.information(self, tr("offline_title"), tr("offline_msg"))
 
     # ── Wi-Fi 接続 ─────────────────────────────────────────
     def _wifi_connect(self):
         ip = self._wifi_ip.text().strip(); port = self._wifi_port.text().strip()
         if not ip:
-            QMessageBox.warning(self, "入力エラー", "IP アドレスを入力してください"); return
-        self._log_sig.emit(f"Wi-Fi 接続中: {ip}:{port}", "INFO")
+            QMessageBox.warning(self, tr("input_error"), tr("no_ip_msg")); return
+        self._log_sig.emit(tr("wifi_connecting", addr=f"{ip}:{port}"), "INFO")
         w = AdbWorker(self._adb_path(), ["connect", f"{ip}:{port}"])
         w.result.connect(lambda out, ok: (
             self._log_sig.emit(out, "INFO" if ok else "ERROR"),
@@ -375,8 +371,8 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         ip = self._pair_ip.text().strip(); port = self._pair_port.text().strip()
         code = self._pair_code.text().strip()
         if not ip or not code:
-            QMessageBox.warning(self, "入力エラー", "ペアリング IP とコードを入力してください"); return
-        self._log_sig.emit(f"ペアリング中: {ip}:{port}", "INFO")
+            QMessageBox.warning(self, tr("input_error"), tr("no_pair_info_msg")); return
+        self._log_sig.emit(tr("wifi_pairing", addr=f"{ip}:{port}"), "INFO")
         w = AdbWorker(self._adb_path(), ["pair", f"{ip}:{port}", code])
         w.result.connect(lambda out, ok: self._log_sig.emit(out, "INFO" if ok else "ERROR"))
         w.finished.connect(w.deleteLater); w.start()
@@ -384,13 +380,13 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
     # ── ファイル操作 ────────────────────────────────────────
     def _browse_scrcpy(self):
         p, _ = QFileDialog.getOpenFileName(
-            self, "scrcpy.exe を選択", str(APP_DIR), "実行ファイル (*.exe)")
+            self, tr("select_scrcpy_title"), str(APP_DIR), tr("select_scrcpy_filter"))
         if p: self._path_edit.setText(p)
 
     def _browse_record(self):
         fmt  = self._rec_fmt.currentText()
         dflt = str(APP_DIR / f"scrcpy_{datetime.now().strftime('%Y%m%d_%H%M%S')}.{fmt}")
-        p, _ = QFileDialog.getSaveFileName(self, "録画ファイルの保存先", dflt, f"動画 (*.{fmt})")
+        p, _ = QFileDialog.getSaveFileName(self, tr("save_record_title"), dflt, tr("save_record_filter", fmt=fmt))
         if p:
             self._rec_file.setText(p)
             self._changed()
@@ -405,7 +401,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         from PyQt5.QtGui import QColor
         cur  = self.settings.get("background_color", "")
         init = QColor(f"#{cur}") if cur else QColor("#000000")
-        c = QColorDialog.getColor(init, self, "背景色を選択")
+        c = QColorDialog.getColor(init, self, tr("select_bg_color_title"))
         if c.isValid():
             self._refresh_bg_btn(c.name().lstrip("#"))
             self._changed()
@@ -417,7 +413,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
     # ── クリップボード ─────────────────────────────────────
     def _copy_command(self):
         QApplication.clipboard().setText(self._cmd_preview.text())
-        self._log_sig.emit("コマンドをクリップボードにコピーしました", "INFO")
+        self._log_sig.emit(tr("cmd_copied"), "INFO")
 
     def _copy_log(self):
         QApplication.clipboard().setText(self._log.toPlainText())
@@ -439,24 +435,24 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
     # ── scrcpy 実行 ─────────────────────────────────────────
     def _validate_launch(self) -> str | None:
         if not self._scrcpy_path_valid():
-            return "scrcpy.exe のパスが無効です。「📁 scrcpy パス」を確認してください。"
+            return tr("path_invalid_err")
         s = self.settings
         if s.get("record_enabled") and not s.get("record_file"):
-            return "録画ファイルのパスが指定されていません。"
+            return tr("no_record_file_err")
         return None
 
     def _run_scrcpy(self):
         self._collect()
         err = self._validate_launch()
         if err:
-            QMessageBox.warning(self, "起動エラー", err); return
+            QMessageBox.warning(self, tr("launch_error_title"), err); return
 
         device  = self._current_device()
         args    = build_args(self.settings, device)
         exe     = self.settings["scrcpy_path"]
         cmd_str = build_command_preview(self.settings, device)
 
-        self._log_sig.emit(f"実行: {cmd_str}", "INFO")
+        self._log_sig.emit(tr("run_cmd", cmd=cmd_str), "INFO")
 
         self._scrcpy = QProcess(self)
         self._scrcpy.readyReadStandardOutput.connect(self._proc_stdout)
@@ -468,7 +464,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         self._scrcpy.start()
 
         if not self._scrcpy.waitForStarted(3000):
-            self._log_sig.emit("scrcpy の起動に失敗しました", "ERROR")
+            self._log_sig.emit(tr("scrcpy_start_failed"), "ERROR")
             self._scrcpy = None
         self._update_run_button()
 
@@ -496,14 +492,66 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
                     self._log_sig.emit(line.strip(), lvl)
 
     def _proc_finished(self, code, _status):
-        self._log_sig.emit(f"scrcpy が終了しました (終了コード: {code})", "INFO")
+        self._log_sig.emit(tr("scrcpy_exited", code=code), "INFO")
         self._scrcpy = None
         self._update_run_button()
 
     def _proc_error(self, err):
-        self._log_sig.emit(f"プロセスエラー: {err}", "ERROR")
+        self._log_sig.emit(tr("proc_error", err=err), "ERROR")
         self._scrcpy = None
         self._update_run_button()
+
+    # ── 言語切替 ────────────────────────────────────────────
+    def _switch_language(self):
+        if self._scrcpy and self._scrcpy.state() != QProcess.NotRunning:
+            QMessageBox.information(self, tr("lang_switch_busy_title"), tr("lang_switch_busy_msg"))
+            return
+        self._collect()
+        self.settings["language"] = "en" if self.settings.get("language", "ja") == "ja" else "ja"
+        i18n.set_lang(self.settings["language"])
+        self._save_settings()
+        self._rebuild_ui()
+
+    def _rebuild_ui(self):
+        log_html = self._log.toHtml()
+        tab_idx  = self._tabs.currentIndex()
+        cached_devices = list(self.device_list)
+
+        if self._adb_worker:
+            try: self._adb_worker.result.disconnect()
+            except TypeError: pass
+
+        self._init_done = False
+        self._build_ui()
+        self._apply_theme()
+        self._init_done = True
+        self._apply_to_ui()
+        self._repopulate_devices(cached_devices)
+        self._log.setHtml(log_html)
+        self._tabs.setCurrentIndex(tab_idx)
+        self._update_command_preview()
+        self._validate_scrcpy_path()
+        self._update_run_button()
+
+    def _repopulate_devices(self, cached_devices: list):
+        from PyQt5.QtCore import QSignalBlocker as SB
+        blocker = SB(self._dev_combo)  # noqa: F841
+        self._dev_combo.clear()
+        self.device_list = []
+        for serial, state, model in cached_devices:
+            status_icon = "✅" if state == "device" else ("⚠️" if state == "offline" else "🔒")
+            conn_tag = "[Wi-Fi]" if _is_wifi_serial(serial) else "[USB]"
+            label = f"{status_icon} {conn_tag} {model or serial}  ({serial})  [{state}]"
+            self._dev_combo.addItem(label, serial)
+            self.device_list.append((serial, state, model))
+        if self.device_list:
+            self._dev_status.setText(tr("device_found_msg", n=len(self.device_list)))
+            self._dev_status.setStyleSheet("color:#4CAF50;font-size:11px;")
+            sel = self.settings.get("selected_device")
+            if sel:
+                for i in range(self._dev_combo.count()):
+                    if self._dev_combo.itemData(i) == sel:
+                        self._dev_combo.setCurrentIndex(i); break
 
     # ── テーマ ──────────────────────────────────────────────
     def _toggle_theme(self):
@@ -514,7 +562,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
 
     def _sync_theme_btn_text(self):
         dark = self.settings.get("dark_mode", True)
-        self._theme_btn.setText("🌙 ダーク" if dark else "☀ ライト")
+        self._theme_btn.setText(tr("theme_dark") if dark else tr("theme_light"))
 
     def _apply_theme(self):
         QApplication.instance().setStyleSheet(
@@ -534,7 +582,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
             self.settings = merged
             self._apply_to_ui()
             self._update_command_preview()
-            self._log_sig.emit("プリセットを読み込みました", "INFO")
+            self._log_sig.emit(tr("preset_loaded"), "INFO")
         self._save_presets()
 
     # ── オンボーディング ───────────────────────────────────
@@ -551,7 +599,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
                     loaded = json.load(f)
                 self.settings.update(loaded)
         except Exception as e:
-            print(f"設定読み込みエラー: {e}")
+            print(tr("settings_load_err", e=e))
 
     def _save_settings(self):
         try:
@@ -559,7 +607,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
             with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
                 json.dump(self.settings, f, ensure_ascii=False, indent=2)
         except Exception as e:
-            print(f"設定保存エラー: {e}")
+            print(tr("settings_save_err", e=e))
 
     def _load_presets(self):
         try:
@@ -567,19 +615,18 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
                 with open(PRESETS_FILE, "r", encoding="utf-8") as f:
                     self.presets = json.load(f)
         except Exception as e:
-            print(f"プリセット読み込みエラー: {e}")
+            print(tr("presets_load_err", e=e))
 
     def _save_presets(self):
         try:
             with open(PRESETS_FILE, "w", encoding="utf-8") as f:
                 json.dump(self.presets, f, ensure_ascii=False, indent=2)
         except Exception as e:
-            print(f"プリセット保存エラー: {e}")
+            print(tr("presets_save_err", e=e))
 
     def closeEvent(self, event):
         if self._scrcpy and self._scrcpy.state() != QProcess.NotRunning:
-            if QMessageBox.question(self, "終了確認",
-                    "scrcpy が実行中です。終了しますか？",
+            if QMessageBox.question(self, tr("close_title"), tr("close_msg"),
                     QMessageBox.Yes | QMessageBox.No) == QMessageBox.No:
                 event.ignore(); return
             self._scrcpy.kill()
