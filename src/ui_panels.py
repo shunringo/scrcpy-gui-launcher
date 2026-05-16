@@ -124,9 +124,9 @@ class LeftPanelMixin:
         self._pair_code = QLineEdit(self.settings.get("pair_code", ""))
         self._pair_code.setPlaceholderText("123456")
         pl.addWidget(self._pair_code)
-        pb = QPushButton(tr("pair_and_connect_btn"))
-        pb.clicked.connect(self._wifi_pair)
-        pl.addWidget(pb)
+        self._pair_btn = QPushButton(tr("pair_and_connect_btn"))
+        self._pair_btn.clicked.connect(self._wifi_pair)
+        pl.addWidget(self._pair_btn)
         return pair_g
 
     def _mk_path_group(self) -> QGroupBox:

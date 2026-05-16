@@ -361,12 +361,16 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         QMessageBox.information(self, tr("pairing_help_title"), tr("pairing_help_text"))
 
     def _wifi_pair(self):
+        # 実行中の場合は多重起動を防ぐ
+        if self._pair_worker is not None or self._connect_worker is not None:
+            return
         ip = self._wifi_ip.text().strip()
         pair_port = self._pair_port.text().strip()
         conn_port = self._wifi_port.text().strip()
         code = self._pair_code.text().strip()
         if not ip or not pair_port or not conn_port or not code:
             QMessageBox.warning(self, tr("input_error"), tr("no_pair_info_msg")); return
+        self._pair_btn.setEnabled(False)
         self._log_sig.emit(tr("wifi_pairing", addr=f"{ip}:{pair_port}"), "INFO")
         self._pair_worker = AdbWorker(self._adb_path(), ["pair", f"{ip}:{pair_port}", code])
 
@@ -380,11 +384,14 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
                 def _on_connect_done(o: str, ok2: bool):
                     self._log_sig.emit(o, "INFO" if ok2 else "ERROR")
                     self._connect_worker = None
+                    self._pair_btn.setEnabled(True)
                     QTimer.singleShot(500, self._refresh_devices)
 
                 self._connect_worker.result.connect(_on_connect_done)
                 self._connect_worker.finished.connect(self._connect_worker.deleteLater)
                 self._connect_worker.start()
+            else:
+                self._pair_btn.setEnabled(True)
 
         self._pair_worker.result.connect(_on_pair_done)
         self._pair_worker.finished.connect(self._pair_worker.deleteLater)
@@ -647,5 +654,9 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
                 event.ignore(); return
             self._scrcpy.kill()
             self._scrcpy.waitForFinished(2000)
+        for worker in (self._pair_worker, self._connect_worker):
+            if worker is not None:
+                worker.quit()
+                worker.wait(2000)
         self._save_settings()
         event.accept()
