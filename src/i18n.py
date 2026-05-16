@@ -62,10 +62,10 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "connect_btn":      "🔗 接続",
 
         # Pairing group
-        "pairing_group":  "ペアリング (Android 11+)",
-        "pair_ip_label":  "ペア IP : ポート:",
-        "pair_code_label": "ペアコード:",
-        "pair_btn":       "🔑 ペアリング",
+        "pairing_group":        "ペアリング (Android 11+)",
+        "pair_port_label":      "ペアリングポート:",
+        "pair_code_label":      "ペアコード:",
+        "pair_and_connect_btn": "🔑 ペアリングして接続",
 
         # Path group
         "path_group":       "📁 scrcpy パス",
@@ -172,9 +172,10 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         ),
         "input_error":      "入力エラー",
         "no_ip_msg":        "IP アドレスを入力してください",
-        "no_pair_info_msg": "ペアリング IP とコードを入力してください",
-        "wifi_connecting":  "Wi-Fi 接続中: {addr}",
-        "wifi_pairing":     "ペアリング中: {addr}",
+        "no_pair_info_msg":     "IP アドレスとペアコードを入力してください",
+        "wifi_connecting":      "Wi-Fi 接続中: {addr}",
+        "wifi_pairing":         "ペアリング中: {addr}",
+        "wifi_pair_success":    "ペアリング成功。接続中: {addr}",
 
         # File dialogs
         "select_scrcpy_title":  "scrcpy.exe を選択",
@@ -281,10 +282,10 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "connect_btn":      "🔗 Connect",
 
         # Pairing group
-        "pairing_group":   "Pairing (Android 11+)",
-        "pair_ip_label":   "Pair IP : Port:",
-        "pair_code_label": "Pair code:",
-        "pair_btn":        "🔑 Pair",
+        "pairing_group":        "Pairing (Android 11+)",
+        "pair_port_label":      "Pairing port:",
+        "pair_code_label":      "Pair code:",
+        "pair_and_connect_btn": "🔑 Pair & Connect",
 
         # Path group
         "path_group":       "📁 scrcpy path",
@@ -391,9 +392,10 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         ),
         "input_error":      "Input error",
         "no_ip_msg":        "Please enter an IP address",
-        "no_pair_info_msg": "Please enter pairing IP and code",
-        "wifi_connecting":  "Connecting Wi-Fi: {addr}",
-        "wifi_pairing":     "Pairing: {addr}",
+        "no_pair_info_msg":     "Please enter IP address and pairing code",
+        "wifi_connecting":      "Connecting Wi-Fi: {addr}",
+        "wifi_pairing":         "Pairing: {addr}",
+        "wifi_pair_success":    "Pairing successful. Connecting: {addr}",
 
         # File dialogs
         "select_scrcpy_title":  "Select scrcpy.exe",

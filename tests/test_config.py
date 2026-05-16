@@ -55,7 +55,7 @@ REQUIRED_KEYS = [
     "scrcpy_path",
     "connection_type",
     "wifi_ip", "wifi_port",
-    "pair_ip", "pair_port", "pair_code",
+    "pair_port", "pair_code",
     "selected_device",
     "max_size", "max_fps", "video_bit_rate",
     "fullscreen", "always_on_top", "rotation",

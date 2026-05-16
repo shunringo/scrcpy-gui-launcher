@@ -145,7 +145,6 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         s["no_display"]    = self._no_disp.isChecked()
         s["wifi_ip"]       = self._wifi_ip.text()
         s["wifi_port"]     = self._wifi_port.text()
-        s["pair_ip"]       = self._pair_ip.text()
         s["pair_port"]     = self._pair_port.text()
         s["pair_code"]     = self._pair_code.text()
         return s
@@ -161,7 +160,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
             self._start_app, self._no_vd_dest, self._no_vd_decor,
             self._cam_mode, self._cam_facing, self._cam_zoom, self._cam_torch,
             self._rec_cb, self._rec_file, self._rec_fmt, self._no_disp,
-            self._wifi_ip, self._wifi_port, self._pair_ip, self._pair_port, self._pair_code,
+            self._wifi_ip, self._wifi_port, self._pair_port, self._pair_code,
         ]
         for w in widgets:
             blockers.append(QSignalBlocker(w))
@@ -209,7 +208,6 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         self._wifi_box.setVisible(is_wifi)
         self._wifi_ip.setText(s.get("wifi_ip", "192.168.1."))
         self._wifi_port.setText(s.get("wifi_port", "5555"))
-        self._pair_ip.setText(s.get("pair_ip", ""))
         self._pair_port.setText(s.get("pair_port", "5556"))
         self._pair_code.setText(s.get("pair_code", ""))
         self._path_edit.setText(s.get("scrcpy_path", ""))
@@ -357,25 +355,27 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         QMessageBox.information(self, tr("offline_title"), tr("offline_msg"))
 
     # ── Wi-Fi 接続 ─────────────────────────────────────────
-    def _wifi_connect(self):
-        ip = self._wifi_ip.text().strip(); port = self._wifi_port.text().strip()
-        if not ip:
-            QMessageBox.warning(self, tr("input_error"), tr("no_ip_msg")); return
-        self._log_sig.emit(tr("wifi_connecting", addr=f"{ip}:{port}"), "INFO")
-        w = AdbWorker(self._adb_path(), ["connect", f"{ip}:{port}"])
-        w.result.connect(lambda out, ok: (
-            self._log_sig.emit(out, "INFO" if ok else "ERROR"),
-            QTimer.singleShot(500, self._refresh_devices)))
-        w.finished.connect(w.deleteLater); w.start()
-
     def _wifi_pair(self):
-        ip = self._pair_ip.text().strip(); port = self._pair_port.text().strip()
+        ip = self._wifi_ip.text().strip()
+        pair_port = self._pair_port.text().strip()
+        conn_port = self._wifi_port.text().strip()
         code = self._pair_code.text().strip()
         if not ip or not code:
             QMessageBox.warning(self, tr("input_error"), tr("no_pair_info_msg")); return
-        self._log_sig.emit(tr("wifi_pairing", addr=f"{ip}:{port}"), "INFO")
-        w = AdbWorker(self._adb_path(), ["pair", f"{ip}:{port}", code])
-        w.result.connect(lambda out, ok: self._log_sig.emit(out, "INFO" if ok else "ERROR"))
+        self._log_sig.emit(tr("wifi_pairing", addr=f"{ip}:{pair_port}"), "INFO")
+        w = AdbWorker(self._adb_path(), ["pair", f"{ip}:{pair_port}", code])
+
+        def _on_pair_done(out: str, ok: bool):
+            self._log_sig.emit(out, "INFO" if ok else "ERROR")
+            if ok and "successfully" in out.lower():
+                self._log_sig.emit(tr("wifi_pair_success", addr=f"{ip}:{conn_port}"), "INFO")
+                w2 = AdbWorker(self._adb_path(), ["connect", f"{ip}:{conn_port}"])
+                w2.result.connect(lambda o, ok2: (
+                    self._log_sig.emit(o, "INFO" if ok2 else "ERROR"),
+                    QTimer.singleShot(500, self._refresh_devices)))
+                w2.finished.connect(w2.deleteLater); w2.start()
+
+        w.result.connect(_on_pair_done)
         w.finished.connect(w.deleteLater); w.start()
 
     # ── ファイル操作 ────────────────────────────────────────

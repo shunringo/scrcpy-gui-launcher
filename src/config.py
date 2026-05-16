@@ -31,7 +31,6 @@ DEFAULT_SETTINGS: dict = {
     "connection_type": "usb",
     "wifi_ip": "192.168.1.",
     "wifi_port": "5555",
-    "pair_ip": "",
     "pair_port": "5556",
     "pair_code": "",
     "selected_device": "",
