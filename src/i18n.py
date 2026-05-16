@@ -65,6 +65,24 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "pair_port_label":      "ペアリングポート:",
         "pair_code_label":      "ペアコード:",
         "pair_and_connect_btn": "🔑 ペアリングして接続",
+        "pairing_help_btn":     "?",
+        "pairing_help_title":   "Wi-Fi ペアリングの手順",
+        "pairing_help_text": (
+            "Android のワイヤレスデバッグでは\n"
+            "「接続用ポート」と「ペアリング用ポート」の\n"
+            "2つが使われます。\n\n"
+            "① Android の設定 → 開発者向けオプション\n"
+            "   →「ワイヤレスデバッグ」をオン\n\n"
+            "② メイン画面に表示される\n"
+            "   「IP アドレスとポート」を\n"
+            "   上部の「IP アドレス」と「ポート」に入力\n\n"
+            "③「デバイスのペア設定（コードを使用）」を\n"
+            "   タップして表示される\n"
+            "   「ポート」→「ペアリングポート」\n"
+            "   「コード」→「ペアコード」に入力\n\n"
+            "④「ペアリングして接続」を押す\n"
+            "   → ペアリング後に自動で接続されます"
+        ),
 
         # Path group
         "path_group":       "📁 scrcpy パス",
@@ -284,6 +302,22 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "pair_port_label":      "Pairing port:",
         "pair_code_label":      "Pair code:",
         "pair_and_connect_btn": "🔑 Pair & Connect",
+        "pairing_help_btn":     "?",
+        "pairing_help_title":   "Wi-Fi Pairing Guide",
+        "pairing_help_text": (
+            "Android wireless debugging uses two separate ports:\n"
+            "one for pairing and one for connecting.\n\n"
+            "① Go to Settings → Developer options\n"
+            "   → Enable 'Wireless debugging'\n\n"
+            "② On the main screen, note the\n"
+            "   'IP address & Port' — enter them in\n"
+            "   'IP address' and 'Port' above\n\n"
+            "③ Tap 'Pair device with pairing code'\n"
+            "   Enter the shown port → 'Pairing port'\n"
+            "   Enter the shown code → 'Pair code'\n\n"
+            "④ Press 'Pair & Connect'\n"
+            "   → Automatically connects after pairing"
+        ),
 
         # Path group
         "path_group":       "📁 scrcpy path",

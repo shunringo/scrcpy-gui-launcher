@@ -110,6 +110,18 @@ class LeftPanelMixin:
     def _mk_pairing_group(self) -> QGroupBox:
         pair_g = QGroupBox(tr("pairing_group"))
         pl = QVBoxLayout(pair_g); pl.setSpacing(4)
+
+        # ヘルプボタン（右寄せ）
+        help_row = QHBoxLayout()
+        help_row.addStretch()
+        help_btn = QPushButton(tr("pairing_help_btn"))
+        help_btn.setFixedSize(20, 20)
+        help_btn.setToolTip(tr("pairing_help_title"))
+        help_btn.setObjectName("pairingHelpBtn")
+        help_btn.clicked.connect(self._show_pairing_help)
+        help_row.addWidget(help_btn)
+        pl.addLayout(help_row)
+
         pl.addWidget(QLabel(tr("pair_port_label")))
         self._pair_port = QLineEdit(self.settings.get("pair_port", "5556"))
         self._pair_port.setPlaceholderText("5556")

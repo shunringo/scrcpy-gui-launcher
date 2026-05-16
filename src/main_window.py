@@ -355,6 +355,9 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         QMessageBox.information(self, tr("offline_title"), tr("offline_msg"))
 
     # ── Wi-Fi 接続 ─────────────────────────────────────────
+    def _show_pairing_help(self):
+        QMessageBox.information(self, tr("pairing_help_title"), tr("pairing_help_text"))
+
     def _wifi_pair(self):
         ip = self._wifi_ip.text().strip()
         pair_port = self._pair_port.text().strip()
