@@ -57,7 +57,7 @@ Just copy the `scrcpy-gui-launcher/` folder into the new scrcpy folder.
 
 ## License
 
-[MIT License](./LICENSE) © 2026 shunringo
+[GNU General Public License v3.0](./LICENSE) © 2026 shunringo
 
 ## Credits
 

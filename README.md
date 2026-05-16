@@ -56,7 +56,7 @@ python scrcpy_launcher.py
 
 ## ライセンス
 
-[MIT License](./LICENSE) © 2026 shunringo
+[GNU General Public License v3.0](./LICENSE) © 2026 shunringo
 
 ## Credits
 
