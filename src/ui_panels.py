@@ -67,7 +67,7 @@ class LeftPanelMixin:
         return dg
 
     def _mk_connection_group(self) -> QGroupBox:
-        cg = QGroupBox("🔌 接続方式")
+        cg = QGroupBox("🔌 新規デバイス接続")
         cl = QVBoxLayout(cg); cl.setSpacing(5)
 
         self._usb_rb  = QRadioButton("USB 接続")

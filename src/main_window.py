@@ -309,8 +309,10 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
             self._dev_status.setStyleSheet("color:#ff9800;font-size:11px;")
         else:
             for serial, state, model in devices:
-                icon = "✅" if state == "device" else ("⚠️" if state == "offline" else "🔒")
-                label = f"{icon} {model or serial}  ({serial})  [{state}]"
+                status_icon = "✅" if state == "device" else ("⚠️" if state == "offline" else "🔒")
+                # シリアルが IP:ポート形式なら Wi-Fi 接続
+                conn_icon = "📡" if ":" in serial else "🔌"
+                label = f"{status_icon}{conn_icon} {model or serial}  ({serial})  [{state}]"
                 self._dev_combo.addItem(label, serial)
                 self.device_list.append((serial, state))
                 if state == "offline":
