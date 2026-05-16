@@ -349,6 +349,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
 
         del blocker
         self._log_sig.emit(tr("device_scan_done", n=len(devices)), "INFO")
+        self._adb_worker = None
         self._update_run_button()
         self._update_command_preview()
 
@@ -519,7 +520,8 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
 
         if self._adb_worker:
             try: self._adb_worker.result.disconnect()
-            except TypeError: pass
+            except (TypeError, RuntimeError): pass
+            self._adb_worker = None
 
         self._init_done = False
         self._build_ui()
