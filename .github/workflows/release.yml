@@ -25,6 +25,24 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
+      - name: Sync app version from tag
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          if (-not $tag.StartsWith("v")) {
+            throw "Release tag must start with 'v': $tag"
+          }
+
+          $version = $tag.Substring(1)
+          @"
+          # -*- coding: utf-8 -*-
+          """Application version (single source of truth)."""
+
+          APP_VERSION = "$version"
+          "@ | Set-Content -Path src/version.py -Encoding utf8
+
+          Write-Host "Synced APP_VERSION to $version"
+
       - name: Build EXE with PyInstaller
         run: pyinstaller scrcpy_gui_launcher.spec
 

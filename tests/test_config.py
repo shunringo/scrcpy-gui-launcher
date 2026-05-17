@@ -4,6 +4,7 @@
 import pytest
 from pathlib import Path
 import config
+from version import APP_VERSION as SINGLE_SOURCE_VERSION
 from config import (
     APP_NAME, APP_VERSION, SETTINGS_VERSION,
     APP_DIR, SETTINGS_FILE, PRESETS_FILE,
@@ -18,6 +19,9 @@ def test_app_name_is_string():
 
 def test_app_version_is_string():
     assert isinstance(APP_VERSION, str) and APP_VERSION
+
+def test_app_version_matches_single_source():
+    assert APP_VERSION == SINGLE_SOURCE_VERSION
 
 def test_settings_version_is_int():
     assert isinstance(SETTINGS_VERSION, int) and SETTINGS_VERSION >= 1

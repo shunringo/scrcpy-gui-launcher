@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-scrcpy GUI Launcher v1.0
+scrcpy GUI Launcher
 scrcpy v4.0 対応 GUI ランチャー — エントリポイント
 """
 

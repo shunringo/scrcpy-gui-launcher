@@ -3,6 +3,7 @@
 
 import sys
 from pathlib import Path
+from version import APP_VERSION
 
 # ── パス解決 ────────────────────────────────────────────
 if getattr(sys, "frozen", False):
@@ -21,7 +22,6 @@ SETTINGS_FILE    = APP_DIR / "scrcpy_launcher_settings.json"
 PRESETS_FILE     = APP_DIR / "scrcpy_launcher_presets.json"
 
 APP_NAME         = "scrcpy GUI Launcher"
-APP_VERSION      = "1.0"
 SETTINGS_VERSION = 2
 
 # ── デフォルト設定 ──────────────────────────────────────
