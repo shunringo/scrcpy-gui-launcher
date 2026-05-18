@@ -8,17 +8,13 @@ pytest.importorskip("PyQt5")
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PyQt5.QtWidgets import QApplication
-
 from main_window import MainWindow
 
 
-def test_language_switch_keeps_window_size(monkeypatch):
-    app = QApplication.instance() or QApplication([])
-    assert app is not None
-
+def test_language_switch_keeps_window_size(qapp, monkeypatch):
     monkeypatch.setattr(MainWindow, "_load_settings", lambda self: None)
     monkeypatch.setattr(MainWindow, "_load_presets", lambda self: None)
+    monkeypatch.setattr(MainWindow, "_show_onboarding", lambda self: None)
     window = MainWindow()
     monkeypatch.setattr(window, "_save_settings", lambda: None)
 
@@ -29,7 +25,10 @@ def test_language_switch_keeps_window_size(monkeypatch):
     window.settings["selected_device"] = "ABC123"
 
     before = window.size()
+    before_lang = window._lang_btn.text()
     window._switch_language()
     after = window.size()
 
     assert after == before
+    assert before_lang == "EN"
+    assert window._lang_btn.text() == "JA"
