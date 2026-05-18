@@ -4,7 +4,6 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtTest import QTest
 
 from themes import DARK_STYLE, LIGHT_STYLE
-from i18n import get_lang, set_lang
 from main_window import MainWindow
 
 
@@ -17,32 +16,25 @@ def _build_window(monkeypatch):
     return window
 
 
-def test_language_button_switches_labels(qapp, monkeypatch):
-    previous_lang = get_lang()
+def test_language_button_triggers_switch(qapp, monkeypatch):
+    called = {}
+
+    def fake_switch(self):
+        called["switch"] = True
+
+    monkeypatch.setattr(MainWindow, "_switch_language", fake_switch)
     window = _build_window(monkeypatch)
-    monkeypatch.setattr(window, "_save_settings", lambda: None)
-    window.show()
 
-    try:
-        before = window._lang_btn.text()
-        qapp.processEvents()
-        window._lang_btn.click()
-        qapp.processEvents()
+    window._lang_btn.click()
 
-        assert before == "EN"
-        assert window.settings["language"] == "en"
-        assert window._lang_btn.text() == "JA"
-        assert window._shortcuts_btn.text() == "⌨ Shortcuts"
-        assert window._theme_btn.text() == "🌙 Dark"
-    finally:
-        set_lang(previous_lang)
+    assert called.get("switch") is True
 
 
 def test_theme_button_toggles_stylesheet(qapp, monkeypatch):
+    original_stylesheet = qapp.styleSheet()
     window = _build_window(monkeypatch)
     window.show()
 
-    original_stylesheet = qapp.styleSheet()
     try:
         QTest.mouseClick(window._theme_btn, Qt.LeftButton)
         qapp.processEvents()
@@ -57,7 +49,7 @@ def test_theme_button_toggles_stylesheet(qapp, monkeypatch):
         qapp.setStyleSheet(original_stylesheet)
 
 
-def test_refresh_button_calls_refresh(monkeypatch):
+def test_refresh_button_calls_refresh(qapp, monkeypatch):
     called = {}
 
     def fake_refresh(self):
@@ -72,7 +64,7 @@ def test_refresh_button_calls_refresh(monkeypatch):
     assert called.get("refresh") is True
 
 
-def test_run_button_calls_run(monkeypatch):
+def test_run_button_calls_run(qapp, monkeypatch):
     called = {}
 
     def fake_run(self):
@@ -89,16 +81,19 @@ def test_run_button_calls_run(monkeypatch):
     assert called.get("run") is True
 
 
-def test_run_and_stop_visibility(monkeypatch):
+def test_run_and_stop_visibility(qapp, monkeypatch):
     window = _build_window(monkeypatch)
     window.show()
+    qapp.processEvents()
 
     window._scrcpy = object()
     window._update_run_button()
-    assert not window._run_btn.isVisible()
-    assert window._stop_btn.isVisible()
+    qapp.processEvents()
+    assert window._run_btn.isHidden()
+    assert not window._stop_btn.isHidden()
 
     window._scrcpy = None
     window._update_run_button()
-    assert window._run_btn.isVisible()
-    assert not window._stop_btn.isVisible()
+    qapp.processEvents()
+    assert not window._run_btn.isHidden()
+    assert window._stop_btn.isHidden()

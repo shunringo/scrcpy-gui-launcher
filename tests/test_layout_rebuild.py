@@ -25,7 +25,10 @@ def test_language_switch_keeps_window_size(qapp, monkeypatch):
     window.settings["selected_device"] = "ABC123"
 
     before = window.size()
+    before_lang = window._lang_btn.text()
     window._switch_language()
     after = window.size()
 
     assert after == before
+    assert before_lang == "EN"
+    assert window._lang_btn.text() == "JA"
