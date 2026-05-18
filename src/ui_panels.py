@@ -36,6 +36,10 @@ class LeftPanelMixin:
         self._lang_btn.clicked.connect(self._switch_language)
         lay.addWidget(self._lang_btn)
 
+        shortcuts_btn = QPushButton(tr("shortcuts_btn"))
+        shortcuts_btn.clicked.connect(self._show_shortcuts)
+        lay.addWidget(shortcuts_btn)
+
         help_btn = QPushButton(tr("help_btn"))
         help_btn.clicked.connect(self._show_onboarding)
         lay.addWidget(help_btn)

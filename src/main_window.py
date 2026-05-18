@@ -21,7 +21,7 @@ from config import (
 from command import build_args, build_command_preview
 from adb import AdbWorker
 from themes import DARK_STYLE, LIGHT_STYLE
-from dialogs import OnboardingDialog, PresetDialog
+from dialogs import OnboardingDialog, PresetDialog, ShortcutDialog
 from ui_panels import LeftPanelMixin
 from ui_tabs import TabsMixin
 
@@ -611,6 +611,9 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         OnboardingDialog(self).exec_()
         self.settings["onboarding_done"] = True
         self._save_settings()
+
+    def _show_shortcuts(self):
+        ShortcutDialog(self).exec_()
 
     # ── 永続化 ─────────────────────────────────────────────
     def _load_settings(self):

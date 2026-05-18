@@ -3,13 +3,14 @@
 
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QComboBox, QMessageBox, QInputDialog,
+    QComboBox, QMessageBox, QInputDialog, QTextBrowser,
 )
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
 from config import APP_NAME, DEFAULT_SETTINGS
-from i18n import tr
+from i18n import tr, get_lang
+from shortcut_data import SHORTCUT_NOTES, SHORTCUT_SECTIONS, SHORTCUT_SOURCE_URL
 
 
 class OnboardingDialog(QDialog):
@@ -103,6 +104,85 @@ class OnboardingDialog(QDialog):
             self._refresh()
         else:
             self.accept()
+
+
+class ShortcutDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle(tr("shortcuts_title"))
+        self.setMinimumWidth(720)
+        self.setMinimumHeight(640)
+        self.setModal(True)
+        self._build_ui()
+
+    def _build_ui(self):
+        lay = QVBoxLayout(self)
+        lay.setSpacing(12)
+        lay.setContentsMargins(20, 18, 20, 18)
+
+        browser = QTextBrowser()
+        browser.setOpenExternalLinks(True)
+        browser.setReadOnly(True)
+        browser.setHtml(self._build_html())
+        lay.addWidget(browser, 1)
+
+        close_btn = QPushButton(tr("preset_close_btn"))
+        close_btn.clicked.connect(self.accept)
+        btn_row = QHBoxLayout()
+        btn_row.addStretch()
+        btn_row.addWidget(close_btn)
+        lay.addLayout(btn_row)
+
+    def _t(self, text: dict[str, str]) -> str:
+        return text["en"] if get_lang() == "en" else text["ja"]
+
+    def _build_html(self) -> str:
+        parts = [
+            "<html><head><style>",
+            "body { font-family: Segoe UI, sans-serif; font-size: 12px; }",
+            "h2 { margin-top: 0; }",
+            "table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }",
+            "th, td { border-bottom: 1px solid #d0d0d0; padding: 6px 8px; text-align: left; vertical-align: top; }",
+            "th { background: rgba(127,127,127,0.12); }",
+            "ul { margin-top: 8px; }",
+            "</style></head><body>",
+            f"<h2>{tr('shortcuts_title')}</h2>",
+            f"<p>{self._esc(tr('shortcuts_intro'))}</p>",
+            f"<p><a href=\"{SHORTCUT_SOURCE_URL}\">{SHORTCUT_SOURCE_URL}</a></p>",
+        ]
+
+        for section in SHORTCUT_SECTIONS:
+            parts.append(f"<h3>{self._esc(self._t(section['title']))}</h3>")
+            parts.append("<table>")
+            parts.append(
+                f"<tr><th>{self._esc(self._t({'ja': '操作', 'en': 'Action'}))}</th>"
+                f"<th>{self._esc(self._t({'ja': 'ショートカット', 'en': 'Shortcut'}))}</th></tr>"
+            )
+            for action, shortcut in section["items"]:
+                parts.append(
+                    "<tr>"
+                    f"<td>{self._esc(self._t(action))}</td>"
+                    f"<td><code>{self._esc(shortcut)}</code></td>"
+                    "</tr>"
+                )
+            parts.append("</table>")
+
+        parts.append(f"<h3>{self._esc(self._t({'ja': '補足', 'en': 'Notes'}))}</h3>")
+        parts.append("<ul>")
+        for note in SHORTCUT_NOTES:
+            parts.append(f"<li>{self._esc(self._t(note))}</li>")
+        parts.append("</ul>")
+        parts.append("</body></html>")
+        return "".join(parts)
+
+    @staticmethod
+    def _esc(text: str) -> str:
+        return (
+            text.replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace('"', "&quot;")
+        )
 
 
 class PresetDialog(QDialog):

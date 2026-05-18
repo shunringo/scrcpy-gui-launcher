@@ -54,6 +54,7 @@ python src/scrcpy_launcher.py
 | Camera | Camera video mirroring (new in v4.0) |
 | Recording | MP4 / MKV recording with optional no-display mode |
 | Command preview | Real-time command preview with one-click copy |
+| Shortcuts | Keyboard and mouse shortcut list based on the official scrcpy docs |
 | Presets | Save and recall your favourite settings as JSON |
 | Theme | Dark mode / Light mode toggle |
 | Language | Japanese / English UI (switchable at runtime) |
