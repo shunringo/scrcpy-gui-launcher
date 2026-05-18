@@ -17,6 +17,8 @@ def test_language_switch_keeps_window_size(monkeypatch):
     app = QApplication.instance() or QApplication([])
     assert app is not None
 
+    monkeypatch.setattr(MainWindow, "_load_settings", lambda self: None)
+    monkeypatch.setattr(MainWindow, "_load_presets", lambda self: None)
     window = MainWindow()
     monkeypatch.setattr(window, "_save_settings", lambda: None)
 
