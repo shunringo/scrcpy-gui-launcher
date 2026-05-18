@@ -43,6 +43,7 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
     "ja": {
         # Header
         "help_btn":    "？ ヘルプ",
+        "shortcuts_btn": "⌨ ショートカット",
         "theme_dark":  "🌙 ダーク",
         "theme_light": "☀ ライト",
         "lang_btn":    "EN",  # shows the OTHER language to switch to
@@ -187,6 +188,11 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
             "3. 設定 → 開発者オプション → USBデバッグ を OFF → ON にしてください\n"
             "4. adb を再起動: adb kill-server / adb start-server"
         ),
+        "shortcuts_title": "scrcpy ショートカット一覧",
+        "shortcuts_intro": (
+            "scrcpy 公式の shortcuts.md を元にした、"
+            "キーボードとマウス操作の一覧です。"
+        ),
         "input_error":      "入力エラー",
         "no_ip_msg":        "IP アドレスを入力してください",
         "no_pair_info_msg":     "IP アドレス、ポート、ペアコードをすべて入力してください",
@@ -280,6 +286,7 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
     "en": {
         # Header
         "help_btn":    "? Help",
+        "shortcuts_btn": "⌨ Shortcuts",
         "theme_dark":  "🌙 Dark",
         "theme_light": "☀ Light",
         "lang_btn":    "JA",
@@ -421,6 +428,11 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
             "2. Tap OK on the device if 'Allow USB debugging?' appears\n"
             "3. Go to Settings → Developer options → Toggle USB debugging OFF then ON\n"
             "4. Restart adb: adb kill-server / adb start-server"
+        ),
+        "shortcuts_title": "scrcpy Shortcuts",
+        "shortcuts_intro": (
+            "This list is based on scrcpy's official shortcuts.md "
+            "for keyboard and mouse control."
         ),
         "input_error":      "Input error",
         "no_ip_msg":        "Please enter an IP address",

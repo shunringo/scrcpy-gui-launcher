@@ -170,12 +170,13 @@ def test_lang_btn_en_shows_ja():
 # ── specific key spot-checks ──────────────────────────────────────────────
 
 @pytest.mark.parametrize("key", [
-    "help_btn", "theme_dark", "theme_light", "lang_btn",
+    "help_btn", "shortcuts_btn", "theme_dark", "theme_light", "lang_btn",
     "device_group", "connection_group", "path_group",
     "tab_display", "tab_vd", "tab_camera", "tab_record",
     "run_btn", "stop_btn", "preset_btn",
     "device_searching", "device_not_found_msg", "device_found_msg",
     "offline_title", "offline_msg",
+    "shortcuts_title", "shortcuts_intro",
     "path_valid", "path_invalid", "path_invalid_err",
     "launch_error_title", "no_record_file_err",
     "close_title", "close_msg",
@@ -196,6 +197,10 @@ def test_parameterized_keys_contain_placeholder_ja(key):
     """All parameterized strings must contain at least one '{' in ja."""
     assert "{" in TRANSLATIONS["ja"][key], \
         f"Key '{key}' in 'ja' has no format placeholder"
+
+def test_shortcuts_intro_mentions_shortcuts_doc():
+    assert "shortcuts.md" in TRANSLATIONS["ja"]["shortcuts_intro"]
+    assert "shortcuts.md" in TRANSLATIONS["en"]["shortcuts_intro"]
 
 def test_no_empty_translations_ja():
     for key, val in TRANSLATIONS["ja"].items():
