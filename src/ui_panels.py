@@ -71,6 +71,8 @@ class LeftPanelMixin:
 
         self._dev_combo = QComboBox()
         self._dev_combo.setPlaceholderText(tr("device_select_placeholder"))
+        self._dev_combo.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+        self._dev_combo.setMinimumContentsLength(18)
         self._dev_combo.currentIndexChanged.connect(self._on_device_changed)
         dl.addWidget(self._dev_combo)
 

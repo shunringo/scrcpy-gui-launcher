@@ -104,7 +104,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         hlay.setSpacing(0); hlay.setContentsMargins(0, 0, 0, 0)
 
         left = self._mk_left_panel()
-        left.setMinimumWidth(230); left.setMaximumWidth(270)
+        left.setFixedWidth(270)
         hlay.addWidget(left)
         sep = QFrame(); sep.setFrameShape(QFrame.VLine); sep.setFrameShadow(QFrame.Sunken)
         hlay.addWidget(sep)
@@ -533,6 +533,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         self._rebuild_ui()
 
     def _rebuild_ui(self):
+        old_size = self.size()
         log_html = self._log.toHtml()
         tab_idx  = self._tabs.currentIndex()
         cached_devices = list(self.device_list)
@@ -553,6 +554,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         self._update_command_preview()
         self._validate_scrcpy_path()
         self._update_run_button()
+        self.resize(old_size)
 
     def _repopulate_devices(self, cached_devices: list):
         from PyQt5.QtCore import QSignalBlocker as SB
