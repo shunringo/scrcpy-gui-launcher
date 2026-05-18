@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""scrcpy v4.0 shortcut data verified against the official GitHub docs."""
+"""scrcpy shortcut data based on the official GitHub docs."""
 
 SHORTCUT_SOURCE_URL = "https://github.com/Genymobile/scrcpy/blob/master/doc/shortcuts.md"
 
@@ -96,4 +96,3 @@ SHORTCUT_NOTES = [
         "MENU may open the development menu in React Native apps.",
     ),
 ]
-

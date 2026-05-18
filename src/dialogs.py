@@ -120,12 +120,6 @@ class ShortcutDialog(QDialog):
         lay.setSpacing(12)
         lay.setContentsMargins(20, 18, 20, 18)
 
-        intro = QLabel(tr("shortcuts_intro"))
-        intro.setWordWrap(True)
-        intro.setTextFormat(Qt.RichText)
-        intro.setOpenExternalLinks(True)
-        lay.addWidget(intro)
-
         browser = QTextBrowser()
         browser.setOpenExternalLinks(True)
         browser.setReadOnly(True)
@@ -153,7 +147,7 @@ class ShortcutDialog(QDialog):
             "ul { margin-top: 8px; }",
             "</style></head><body>",
             f"<h2>{tr('shortcuts_title')}</h2>",
-            f"<p>{self._esc(self._t({'ja': 'scrcpy 公式の shortcuts.md を元にした、キーボードとマウス操作の一覧です。', 'en': 'This list is based on scrcpy\'s official shortcuts.md for keyboard and mouse control.'}))}</p>",
+            f"<p>{self._esc(tr('shortcuts_intro'))}</p>",
             f"<p><a href=\"{SHORTCUT_SOURCE_URL}\">{SHORTCUT_SOURCE_URL}</a></p>",
         ]
 
