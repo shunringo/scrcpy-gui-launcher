@@ -34,6 +34,10 @@ jobs:
           }
 
           $version = $tag.Substring(1)
+          if ($version -notmatch '^\d+\.\d+\.\d+(?:[-.][0-9A-Za-z.]+)?$') {
+            throw "Release version is not valid semver-like format: $version"
+          }
+
           $content = @(
             '# -*- coding: utf-8 -*-',
             '"""Application version (single source of truth)."""',
