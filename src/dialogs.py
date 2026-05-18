@@ -120,11 +120,11 @@ class ShortcutDialog(QDialog):
         lay.setSpacing(12)
         lay.setContentsMargins(20, 18, 20, 18)
 
-        browser = QTextBrowser()
-        browser.setOpenExternalLinks(True)
-        browser.setReadOnly(True)
-        browser.setHtml(self._build_html())
-        lay.addWidget(browser, 1)
+        self._browser = QTextBrowser()
+        self._browser.setOpenExternalLinks(True)
+        self._browser.setReadOnly(True)
+        self._browser.setHtml(self._build_html())
+        lay.addWidget(self._browser, 1)
 
         close_btn = QPushButton(tr("preset_close_btn"))
         close_btn.clicked.connect(self.accept)
