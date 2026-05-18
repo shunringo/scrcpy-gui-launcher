@@ -104,7 +104,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         hlay.setSpacing(0); hlay.setContentsMargins(0, 0, 0, 0)
 
         left = self._mk_left_panel()
-        left.setMinimumWidth(230); left.setMaximumWidth(270)
+        left.setFixedWidth(270)
         hlay.addWidget(left)
         sep = QFrame(); sep.setFrameShape(QFrame.VLine); sep.setFrameShadow(QFrame.Sunken)
         hlay.addWidget(sep)
