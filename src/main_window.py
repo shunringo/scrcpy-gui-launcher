@@ -533,6 +533,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         self._rebuild_ui()
 
     def _rebuild_ui(self):
+        old_size = self.size()
         log_html = self._log.toHtml()
         tab_idx  = self._tabs.currentIndex()
         cached_devices = list(self.device_list)
@@ -553,6 +554,7 @@ class MainWindow(LeftPanelMixin, TabsMixin, QMainWindow):
         self._update_command_preview()
         self._validate_scrcpy_path()
         self._update_run_button()
+        self.resize(old_size)
 
     def _repopulate_devices(self, cached_devices: list):
         from PyQt5.QtCore import QSignalBlocker as SB
