@@ -81,9 +81,9 @@ class LeftPanelMixin:
         self._dev_status.setStyleSheet("color:#ff9800;font-size:11px;")
         dl.addWidget(self._dev_status)
 
-        ref_btn = QPushButton(tr("refresh_devices_btn"))
-        ref_btn.clicked.connect(self._refresh_devices)
-        dl.addWidget(ref_btn)
+        self._refresh_btn = QPushButton(tr("refresh_devices_btn"))
+        self._refresh_btn.clicked.connect(self._refresh_devices)
+        dl.addWidget(self._refresh_btn)
         return dg
 
     def _mk_connection_group(self) -> QGroupBox:

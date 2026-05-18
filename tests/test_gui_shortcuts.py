@@ -38,8 +38,6 @@ def test_shortcut_dialog_renders_expected_content(qapp):
     set_lang("ja")
     try:
         dialog = ShortcutDialog()
-        dialog.show()
-        qapp.processEvents()
 
         html = dialog._browser.toHtml()
         text = dialog._browser.toPlainText()
